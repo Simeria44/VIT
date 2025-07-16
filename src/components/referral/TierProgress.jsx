@@ -232,10 +232,27 @@ const TierProgress = ({ referralCount = 0 }) => {
       )}
 
       <div className="tier-grid">
-        {REFERRAL_TIERS.map((tier) => {
+        {REFERRAL_TIERS.map((tier, index) => {
           const isCompleted = referralCount >= tier.minBuyers && tier.tier < currentTier.tier;
           const isCurrent = tier.tier === currentTier.tier;
           const isLocked = tier.tier > currentTier.tier;
+          
+          // Calculate additional referrals needed to reach next tier
+          let requirementText = '';
+          if (tier.tier === 8) {
+            // Tier 8 is maximum tier, show nothing
+            requirementText = '';
+          } else {
+            const nextTierIndex = index + 1;
+            const nextTier = REFERRAL_TIERS[nextTierIndex];
+            const additionalNeeded = nextTier.minBuyers - tier.minBuyers;
+            
+            if (tier.tier === 1) {
+              requirementText = `needs ${additionalNeeded} referrals to get to tier ${nextTier.tier}`;
+            } else {
+              requirementText = `needs additional ${additionalNeeded} referrals to get to tier ${nextTier.tier}`;
+            }
+          }
           
           return (
             <div 
@@ -249,9 +266,11 @@ const TierProgress = ({ referralCount = 0 }) => {
               <div className={`tier-bonus ${isCurrent ? 'current' : isCompleted ? 'completed' : 'locked'}`}>
                 {tier.bonus}%
               </div>
-              <div className="tier-requirement">
-                {tier.minBuyers === 0 ? 'Default' : `${tier.minBuyers}+ referrals`}
-              </div>
+              {requirementText && (
+                <div className="tier-requirement">
+                  {requirementText}
+                </div>
+              )}
             </div>
           );
         })}
