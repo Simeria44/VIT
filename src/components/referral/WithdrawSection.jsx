@@ -334,15 +334,7 @@ const WithdrawSection = ({
             {ethStatus.message}
           </div>
           
-          {/* Debug info for development */}
-          {process.env.NODE_ENV === 'development' && (
-            <div style={{ fontSize: '0.7rem', color: '#666', marginBottom: '10px' }}>
-              Debug: Balance: {formatNativeCurrency(ethData?.bonus || 0, 18, 6)} ETH | 
-              Min: {formatNativeCurrency(ethData?.minPayout || 0, 18, 6)} ETH | 
-              Last: {new Date((ethData?.lastWithdrawal || 0) * 1000).toLocaleDateString()} | 
-              Cooldown: {timeRemaining.eth > 0 ? formatTimeRemaining(timeRemaining.eth) : 'Available'}
-            </div>
-          )}
+
           
           <div className={`network-indicator ${isOnEthNetwork ? 'current-network' : 'different-network'}`}>
             {isOnEthNetwork ? (
@@ -407,15 +399,7 @@ const WithdrawSection = ({
             {bnbStatus.message}
           </div>
           
-          {/* Debug info for development */}
-          {process.env.NODE_ENV === 'development' && (
-            <div style={{ fontSize: '0.7rem', color: '#666', marginBottom: '10px' }}>
-              Debug: Balance: {formatNativeCurrency(bnbData?.bonus || 0, 18, 6)} BNB | 
-              Min: {formatNativeCurrency(bnbData?.minPayout || 0, 18, 6)} BNB | 
-              Last: {new Date((bnbData?.lastWithdrawal || 0) * 1000).toLocaleDateString()} | 
-              Cooldown: {timeRemaining.bnb > 0 ? formatTimeRemaining(timeRemaining.bnb) : 'Available'}
-            </div>
-          )}
+
           
           <div className={`network-indicator ${isOnBnbNetwork ? 'current-network' : 'different-network'}`}>
             {isOnBnbNetwork ? (
