@@ -109,6 +109,7 @@ const ReferralHistoryCard = styled.div`
       align-items: center;
       justify-content: space-between;
       padding: 12px 16px;
+      margin-top: 3px;
       margin-bottom: 10px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
