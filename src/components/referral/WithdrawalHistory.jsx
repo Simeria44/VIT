@@ -282,8 +282,23 @@ const WithdrawalHistory = ({ withdrawalHistory, isLoading, error }) => {
     });
   };
 
-  const openTransaction = (txHash, chainId) => {
+  const openTransaction = (txHash, chain) => {
+    // Convert chain string to chainId
+    let chainId;
+    if (chain === 'ETH') {
+      chainId = 11155111; // Ethereum Sepolia
+    } else if (chain === 'BNB') {
+      chainId = 97; // BSC Testnet
+    } else {
+      console.error('Unknown chain for explorer URL:', chain);
+      return;
+    }
+    
     const explorerUrl = getExplorerUrl(chainId, txHash);
+    if (explorerUrl === '#') {
+      console.error('Invalid chainId for explorer URL:', chainId);
+      return;
+    }
     window.open(explorerUrl, '_blank');
   };
 
@@ -366,7 +381,7 @@ const WithdrawalHistory = ({ withdrawalHistory, isLoading, error }) => {
                     {item.transactionHash ? (
                       <FiExternalLink 
                         className="external-link"
-                        onClick={() => openTransaction(item.transactionHash, item.chainId)}
+                        onClick={() => openTransaction(item.transactionHash, item.chain)}
                       />
                     ) : (
                       <div className="external-link" style={{ opacity: 0.3, cursor: 'not-allowed' }}>
