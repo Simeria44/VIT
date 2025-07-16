@@ -82,11 +82,9 @@ const ChainStatsWrapper = styled.div`
   }
 `;
 
-const ChainStatCard = styled.div.attrs(props => ({
-  // Filter out the chainColor prop so it doesn't get passed to the DOM
-  // This prevents the React warning
-  chaincolor: props.chainColor // lowercase version for DOM
-}))`
+const ChainStatCard = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'chainColor'
+})`
   background: rgba(12, 12, 12, 0.9);
   border: 2px solid ${props => props.chainColor || '#444'};
   border-radius: 15px;
