@@ -240,8 +240,8 @@ const TierProgress = ({ referralCount = 0 }) => {
           // Calculate additional referrals needed to reach next tier
           let requirementText = '';
           if (tier.tier === 8) {
-            // Tier 8 is maximum tier, show nothing
-            requirementText = '';
+            // Tier 8 is maximum tier, show special message
+            requirementText = 'Become a Legend';
           } else {
             const nextTierIndex = index + 1;
             const nextTier = REFERRAL_TIERS[nextTierIndex];
