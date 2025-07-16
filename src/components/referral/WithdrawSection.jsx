@@ -154,6 +154,20 @@ const WithdrawWrapper = styled.div`
         color: #888;
         border: 1px solid #444;
       }
+      
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid transparent;
+        border-top: 2px solid currentColor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
     }
     
     .minimum-info {
@@ -225,7 +239,8 @@ const WithdrawSection = ({
   ethData, 
   bnbData, 
   onWithdraw, 
-  isWithdrawing,
+  isEthWithdrawing,
+  isBnbWithdrawing,
   currentChainId,
   ethChainId,
   bnbChainId,
@@ -353,9 +368,9 @@ const WithdrawSection = ({
           <button
             className={`withdraw-button ${ethStatus.type === 'available' ? 'available' : 'disabled'}`}
             onClick={() => onWithdraw('eth')}
-            disabled={ethStatus.type !== 'available' || isWithdrawing}
+            disabled={ethStatus.type !== 'available' || isEthWithdrawing}
           >
-            {isWithdrawing ? (
+            {isEthWithdrawing ? (
               <>
                 <div className="spinner" />
                 Withdrawing...
@@ -418,9 +433,9 @@ const WithdrawSection = ({
           <button
             className={`withdraw-button ${bnbStatus.type === 'available' ? 'available' : 'disabled'}`}
             onClick={() => onWithdraw('bnb')}
-            disabled={bnbStatus.type !== 'available' || isWithdrawing}
+            disabled={bnbStatus.type !== 'available' || isBnbWithdrawing}
           >
-            {isWithdrawing ? (
+            {isBnbWithdrawing ? (
               <>
                 <div className="spinner" />
                 Withdrawing...
