@@ -3,16 +3,16 @@ import * as ConfigModuleEth from "./configEth";
 import * as ConfigModuleBnb from "./configBnb";
 
 // Referral tier configuration matching the contract
-// Contract tiers: [931, 431, 181, 81, 41, 16, 6, 0] with bonuses [70, 50, 40, 30, 25, 20, 15, 10]
+// Contract tiers: [930, 430, 180, 80, 40, 15, 5, 0] with bonuses [70, 50, 40, 30, 25, 20, 15, 10]
 export const REFERRAL_TIERS = [
   { tier: 1, bonus: 10, minBuyers: 0, label: "Bronze" },
-  { tier: 2, bonus: 15, minBuyers: 6, label: "Silver" },
-  { tier: 3, bonus: 20, minBuyers: 16, label: "Gold" },
-  { tier: 4, bonus: 25, minBuyers: 41, label: "Platinum" },
-  { tier: 5, bonus: 30, minBuyers: 81, label: "Diamond" },
-  { tier: 6, bonus: 40, minBuyers: 181, label: "Master" },
-  { tier: 7, bonus: 50, minBuyers: 431, label: "Grandmaster" },
-  { tier: 8, bonus: 70, minBuyers: 931, label: "Legend" }
+  { tier: 2, bonus: 15, minBuyers: 5, label: "Silver" },
+  { tier: 3, bonus: 20, minBuyers: 15, label: "Gold" },
+  { tier: 4, bonus: 25, minBuyers: 40, label: "Platinum" },
+  { tier: 5, bonus: 30, minBuyers: 80, label: "Diamond" },
+  { tier: 6, bonus: 40, minBuyers: 180, label: "Master" },
+  { tier: 7, bonus: 50, minBuyers: 430, label: "Grandmaster" },
+  { tier: 8, bonus: 70, minBuyers: 930, label: "Legend" }
 ];
 
 // Withdrawal cooldown (2 weeks in seconds)
