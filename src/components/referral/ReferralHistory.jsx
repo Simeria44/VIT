@@ -235,13 +235,7 @@ const ReferralHistoryCard = styled.div`
 `;
 
 const ReferralHistory = ({ referralHistory, isLoading, error }) => {
-  // Debug logging
-  console.log('ReferralHistory Component:', {
-    referralHistoryLength: referralHistory?.length || 0,
-    referralHistory: referralHistory,
-    isLoading,
-    error
-  });
+
 
   const formatAddress = (address) => {
     if (!address) return '';

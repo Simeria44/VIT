@@ -22,14 +22,7 @@ export const useGraphReferralData = () => {
   });
 
   const fetchReferralData = async () => {
-    console.log('useGraphReferralData - fetchReferralData called:', {
-      address,
-      addressLowercase: address?.toLowerCase(),
-      isConnected
-    });
-
     if (!address) {
-      console.log('No address provided, clearing data');
       setReferralData([]);
       setWithdrawalData([]);
       setStats({ totalReferrals: 0, totalEarned: '0', totalWithdrawn: '0' });
@@ -52,13 +45,7 @@ export const useGraphReferralData = () => {
         { userAddress: address.toLowerCase() }
       );
 
-      // Debug logging
-      console.log('GraphQL Raw Data:', {
-        ethReferrals: ethReferrals?.user,
-        bscReferrals: bscReferrals?.user,
-        ethWithdrawals: ethWithdrawals?.user,
-        bscWithdrawals: bscWithdrawals?.user
-      });
+
 
       // Combine user data from both networks
       const combinedUser = combineUserData(
@@ -71,12 +58,7 @@ export const useGraphReferralData = () => {
         bscWithdrawals?.user
       );
 
-      console.log('Combined Data:', {
-        combinedUser,
-        combinedWithdrawals,
-        referralEventsCount: combinedUser?.referralEvents?.length || 0,
-        withdrawalEventsCount: combinedWithdrawals?.withdrawalEvents?.length || 0
-      });
+
 
       if (combinedUser) {
         // Format referral data for display
@@ -94,7 +76,7 @@ export const useGraphReferralData = () => {
           rawTimestamp: event.timestamp
         }));
 
-        console.log('Formatted Referrals:', formattedReferrals);
+
         setReferralData(formattedReferrals);
 
         // Update stats
@@ -121,7 +103,7 @@ export const useGraphReferralData = () => {
           rawTimestamp: event.timestamp
         }));
 
-        console.log('Formatted Withdrawals:', formattedWithdrawals);
+
         setWithdrawalData(formattedWithdrawals);
       } else {
         setWithdrawalData([]);

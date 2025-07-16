@@ -51,15 +51,7 @@ const HistorySection = ({ userAddress, isConnected }) => {
     refresh: refetch 
   } = useUnifiedReferralData();
 
-  // Debug logging
-  console.log('HistorySection Debug:', {
-    referralHistory: referralHistory?.length || 0,
-    withdrawalHistory: withdrawalHistory?.length || 0,
-    isLoading,
-    error,
-    isConnected,
-    userAddress
-  });
+
 
   if (!isConnected || !userAddress) {
     return null;
