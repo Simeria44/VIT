@@ -248,9 +248,9 @@ const TierProgress = ({ referralCount = 0 }) => {
             const additionalNeeded = nextTier.minBuyers - tier.minBuyers;
             
             if (tier.tier === 1) {
-              requirementText = `needs ${additionalNeeded} referrals to get to tier ${nextTier.tier}`;
+              requirementText = `${additionalNeeded} referrals to tier ${nextTier.tier}`;
             } else {
-              requirementText = `needs additional ${additionalNeeded} referrals to get to tier ${nextTier.tier}`;
+              requirementText = `+${additionalNeeded} referrals to tier ${nextTier.tier}`;
             }
           }
           
