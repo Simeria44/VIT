@@ -2,8 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FiDownload, FiExternalLink, FiClock, FiDollarSign } from 'react-icons/fi';
-import { networkLink as ethNetworkLink } from '../../contracts/configEth';
-import { networkLink as bnbNetworkLink } from '../../contracts/configBnb';
+import { getExplorerUrl } from '../../utils/referralUtils';
 
 const WithdrawalHistoryCard = styled.div`
   background: rgba(12, 12, 12, 0.8);
@@ -283,13 +282,9 @@ const WithdrawalHistory = ({ withdrawalHistory, isLoading, error }) => {
     });
   };
 
-  const getNetworkLink = (chainId) => {
-    return chainId === 11155111 ? ethNetworkLink : bnbNetworkLink;
-  };
-
   const openTransaction = (txHash, chainId) => {
-    const baseUrl = getNetworkLink(chainId);
-    window.open(`${baseUrl}/${txHash}`, '_blank');
+    const explorerUrl = getExplorerUrl(chainId, txHash);
+    window.open(explorerUrl, '_blank');
   };
 
   // Calculate summary statistics

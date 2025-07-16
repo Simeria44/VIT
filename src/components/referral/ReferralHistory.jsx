@@ -2,8 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FiUsers, FiExternalLink, FiClock, FiTrendingUp } from 'react-icons/fi';
-import { networkLink as ethNetworkLink } from '../../contracts/configEth';
-import { networkLink as bnbNetworkLink } from '../../contracts/configBnb';
+import { getExplorerUrl } from '../../utils/referralUtils';
 
 const ReferralHistoryCard = styled.div`
   background: rgba(12, 12, 12, 0.8);
@@ -258,13 +257,9 @@ const ReferralHistory = ({ referralHistory, isLoading, error }) => {
     });
   };
 
-  const getNetworkLink = (chainId) => {
-    return chainId === 11155111 ? ethNetworkLink : bnbNetworkLink;
-  };
-
   const openTransaction = (txHash, chainId) => {
-    const baseUrl = getNetworkLink(chainId);
-    window.open(`${baseUrl}/${txHash}`, '_blank');
+    const explorerUrl = getExplorerUrl(chainId, txHash);
+    window.open(explorerUrl, '_blank');
   };
 
   return (
