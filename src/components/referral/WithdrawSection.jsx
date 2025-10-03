@@ -154,6 +154,20 @@ const WithdrawWrapper = styled.div`
         color: #888;
         border: 1px solid #444;
       }
+      
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid transparent;
+        border-top: 2px solid currentColor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
     }
     
     .minimum-info {
@@ -225,7 +239,8 @@ const WithdrawSection = ({
   ethData, 
   bnbData, 
   onWithdraw, 
-  isWithdrawing,
+  isEthWithdrawing,
+  isBnbWithdrawing,
   currentChainId,
   ethChainId,
   bnbChainId,
@@ -334,15 +349,7 @@ const WithdrawSection = ({
             {ethStatus.message}
           </div>
           
-          {/* Debug info for development */}
-          {process.env.NODE_ENV === 'development' && (
-            <div style={{ fontSize: '0.7rem', color: '#666', marginBottom: '10px' }}>
-              Debug: Balance: {formatNativeCurrency(ethData?.bonus || 0, 18, 6)} ETH | 
-              Min: {formatNativeCurrency(ethData?.minPayout || 0, 18, 6)} ETH | 
-              Last: {ethData?.lastWithdrawal || 0} | 
-              Time Left: {timeRemaining.eth}s
-            </div>
-          )}
+
           
           <div className={`network-indicator ${isOnEthNetwork ? 'current-network' : 'different-network'}`}>
             {isOnEthNetwork ? (
@@ -361,9 +368,9 @@ const WithdrawSection = ({
           <button
             className={`withdraw-button ${ethStatus.type === 'available' ? 'available' : 'disabled'}`}
             onClick={() => onWithdraw('eth')}
-            disabled={ethStatus.type !== 'available' || isWithdrawing}
+            disabled={ethStatus.type !== 'available' || isEthWithdrawing}
           >
-            {isWithdrawing ? (
+            {isEthWithdrawing ? (
               <>
                 <div className="spinner" />
                 Withdrawing...
@@ -407,15 +414,7 @@ const WithdrawSection = ({
             {bnbStatus.message}
           </div>
           
-          {/* Debug info for development */}
-          {process.env.NODE_ENV === 'development' && (
-            <div style={{ fontSize: '0.7rem', color: '#666', marginBottom: '10px' }}>
-              Debug: Balance: {formatNativeCurrency(bnbData?.bonus || 0, 18, 6)} BNB | 
-              Min: {formatNativeCurrency(bnbData?.minPayout || 0, 18, 6)} BNB | 
-              Last: {bnbData?.lastWithdrawal || 0} | 
-              Time Left: {timeRemaining.bnb}s
-            </div>
-          )}
+
           
           <div className={`network-indicator ${isOnBnbNetwork ? 'current-network' : 'different-network'}`}>
             {isOnBnbNetwork ? (
@@ -434,9 +433,9 @@ const WithdrawSection = ({
           <button
             className={`withdraw-button ${bnbStatus.type === 'available' ? 'available' : 'disabled'}`}
             onClick={() => onWithdraw('bnb')}
-            disabled={bnbStatus.type !== 'available' || isWithdrawing}
+            disabled={bnbStatus.type !== 'available' || isBnbWithdrawing}
           >
-            {isWithdrawing ? (
+            {isBnbWithdrawing ? (
               <>
                 <div className="spinner" />
                 Withdrawing...

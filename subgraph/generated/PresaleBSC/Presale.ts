@@ -716,25 +716,6 @@ export class Presale extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  minimumBuyUsd(): BigInt {
-    let result = super.call("minimumBuyUsd", "minimumBuyUsd():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_minimumBuyUsd(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "minimumBuyUsd",
-      "minimumBuyUsd():(uint256)",
-      [],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   minReferralPayoutBnb(): BigInt {
     let result = super.call(
       "minReferralPayoutBnb",
@@ -772,6 +753,25 @@ export class Presale extends ethereum.SmartContract {
     let result = super.tryCall(
       "minReferralPayoutEth",
       "minReferralPayoutEth():(uint256)",
+      [],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  minimumBuyUsd(): BigInt {
+    let result = super.call("minimumBuyUsd", "minimumBuyUsd():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_minimumBuyUsd(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "minimumBuyUsd",
+      "minimumBuyUsd():(uint256)",
       [],
     );
     if (result.reverted) {
@@ -1154,6 +1154,52 @@ export class Presale extends ethereum.SmartContract {
         value[2].toBigInt(),
       ),
     );
+  }
+}
+
+export class ConstructorCall extends ethereum.Call {
+  get inputs(): ConstructorCall__Inputs {
+    return new ConstructorCall__Inputs(this);
+  }
+
+  get outputs(): ConstructorCall__Outputs {
+    return new ConstructorCall__Outputs(this);
+  }
+}
+
+export class ConstructorCall__Inputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+
+  get _payment(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _token(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _priceFeed(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
+  get _minReferralPayoutEth(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get _minReferralPayoutBnb(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+}
+
+export class ConstructorCall__Outputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
+    this._call = call;
   }
 }
 
@@ -1769,52 +1815,6 @@ export class WithdrawTokensCall__Outputs {
   _call: WithdrawTokensCall;
 
   constructor(call: WithdrawTokensCall) {
-    this._call = call;
-  }
-}
-
-export class ConstructorCall extends ethereum.Call {
-  get inputs(): ConstructorCall__Inputs {
-    return new ConstructorCall__Inputs(this);
-  }
-
-  get outputs(): ConstructorCall__Outputs {
-    return new ConstructorCall__Outputs(this);
-  }
-}
-
-export class ConstructorCall__Inputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
-    this._call = call;
-  }
-
-  get _payment(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _token(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _priceFeed(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-
-  get _minReferralPayoutEth(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
-  get _minReferralPayoutBnb(): BigInt {
-    return this._call.inputValues[4].value.toBigInt();
-  }
-}
-
-export class ConstructorCall__Outputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
     this._call = call;
   }
 }

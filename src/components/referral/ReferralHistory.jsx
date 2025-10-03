@@ -2,8 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FiUsers, FiExternalLink, FiClock, FiTrendingUp } from 'react-icons/fi';
-import { networkLink as ethNetworkLink } from '../../contracts/configEth';
-import { networkLink as bnbNetworkLink } from '../../contracts/configBnb';
+import { getExplorerUrl } from '../../utils/referralUtils';
 
 const ReferralHistoryCard = styled.div`
   background: rgba(12, 12, 12, 0.8);
@@ -110,6 +109,7 @@ const ReferralHistoryCard = styled.div`
       align-items: center;
       justify-content: space-between;
       padding: 12px 16px;
+      margin-top: 3px;
       margin-bottom: 10px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -236,13 +236,7 @@ const ReferralHistoryCard = styled.div`
 `;
 
 const ReferralHistory = ({ referralHistory, isLoading, error }) => {
-  // Debug logging
-  console.log('ReferralHistory Component:', {
-    referralHistoryLength: referralHistory?.length || 0,
-    referralHistory: referralHistory,
-    isLoading,
-    error
-  });
+
 
   const formatAddress = (address) => {
     if (!address) return '';
@@ -258,13 +252,24 @@ const ReferralHistory = ({ referralHistory, isLoading, error }) => {
     });
   };
 
-  const getNetworkLink = (chainId) => {
-    return chainId === 11155111 ? ethNetworkLink : bnbNetworkLink;
-  };
-
-  const openTransaction = (txHash, chainId) => {
-    const baseUrl = getNetworkLink(chainId);
-    window.open(`${baseUrl}/${txHash}`, '_blank');
+  const openTransaction = (txHash, chain) => {
+    // Convert chain string to chainId
+    let chainId;
+    if (chain === 'ETH') {
+      chainId = 11155111; // Ethereum Sepolia
+    } else if (chain === 'BNB') {
+      chainId = 97; // BSC Testnet
+    } else {
+      console.error('Unknown chain for explorer URL:', chain);
+      return;
+    }
+    
+    const explorerUrl = getExplorerUrl(chainId, txHash);
+    if (explorerUrl === '#') {
+      console.error('Invalid chainId for explorer URL:', chainId);
+      return;
+    }
+    window.open(explorerUrl, '_blank');
   };
 
   return (
@@ -342,7 +347,7 @@ const ReferralHistory = ({ referralHistory, isLoading, error }) => {
                   {item.transactionHash && (
                     <FiExternalLink 
                       className="external-link"
-                      onClick={() => openTransaction(item.transactionHash, item.chainId)}
+                      onClick={() => openTransaction(item.transactionHash, item.chain)}
                     />
                   )}
                   {!item.transactionHash && (

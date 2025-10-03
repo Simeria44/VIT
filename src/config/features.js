@@ -2,12 +2,12 @@
 export const FEATURES = {
   // Set to true to use The Graph Protocol for referral data
   // Set to false to use the legacy block scanning approach
-  USE_THE_GRAPH: true, // ✅ ETH subgraph deployed successfully!
+  USE_THE_GRAPH: true, // ✅ Using The Graph Protocol with updated contract addresses
   
   // The Graph subgraph URLs (update these after deployment)
   SUBGRAPH_URLS: {
-    ethereum: 'https://api.studio.thegraph.com/query/116215/bnbmga-ethtest/v0.0.1', // Using v0.0.1 while v0.0.2 syncs
-    bsc: 'https://api.studio.thegraph.com/query/116215/bnbmga-bn-btest/v0.0.1' // ✅ Back to v0.0.1 - more recent blocks!
+    ethereum: 'https://api.studio.thegraph.com/query/116215/bnbmga-ethtest/v0.0.3', // ✅ Updated with new contract addresses
+    bsc: 'https://api.studio.thegraph.com/query/116215/bnbmga-bn-btest/v0.0.3' // ✅ Updated with new contract addresses
   },
   
   // Block range settings for legacy approach

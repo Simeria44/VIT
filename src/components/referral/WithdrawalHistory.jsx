@@ -2,8 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FiDownload, FiExternalLink, FiClock, FiDollarSign } from 'react-icons/fi';
-import { networkLink as ethNetworkLink } from '../../contracts/configEth';
-import { networkLink as bnbNetworkLink } from '../../contracts/configBnb';
+import { getExplorerUrl } from '../../utils/referralUtils';
 
 const WithdrawalHistoryCard = styled.div`
   background: rgba(12, 12, 12, 0.8);
@@ -110,6 +109,7 @@ const WithdrawalHistoryCard = styled.div`
       align-items: center;
       justify-content: space-between;
       padding: 12px 16px;
+      margin-top: 3px;
       margin-bottom: 10px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -283,13 +283,24 @@ const WithdrawalHistory = ({ withdrawalHistory, isLoading, error }) => {
     });
   };
 
-  const getNetworkLink = (chainId) => {
-    return chainId === 11155111 ? ethNetworkLink : bnbNetworkLink;
-  };
-
-  const openTransaction = (txHash, chainId) => {
-    const baseUrl = getNetworkLink(chainId);
-    window.open(`${baseUrl}/${txHash}`, '_blank');
+  const openTransaction = (txHash, chain) => {
+    // Convert chain string to chainId
+    let chainId;
+    if (chain === 'ETH') {
+      chainId = 11155111; // Ethereum Sepolia
+    } else if (chain === 'BNB') {
+      chainId = 97; // BSC Testnet
+    } else {
+      console.error('Unknown chain for explorer URL:', chain);
+      return;
+    }
+    
+    const explorerUrl = getExplorerUrl(chainId, txHash);
+    if (explorerUrl === '#') {
+      console.error('Invalid chainId for explorer URL:', chainId);
+      return;
+    }
+    window.open(explorerUrl, '_blank');
   };
 
   // Calculate summary statistics
@@ -371,7 +382,7 @@ const WithdrawalHistory = ({ withdrawalHistory, isLoading, error }) => {
                     {item.transactionHash ? (
                       <FiExternalLink 
                         className="external-link"
-                        onClick={() => openTransaction(item.transactionHash, item.chainId)}
+                        onClick={() => openTransaction(item.transactionHash, item.chain)}
                       />
                     ) : (
                       <div className="external-link" style={{ opacity: 0.3, cursor: 'not-allowed' }}>

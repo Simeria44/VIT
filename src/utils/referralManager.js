@@ -168,7 +168,7 @@ export const processReferralFromURL = () => {
       
       if (referrerAddress) {
         setCurrentReferrer(referrerAddress);
-        console.log(`Referral processed: ${refCode} -> ${referrerAddress}`);
+
         return referrerAddress;
       } else {
         console.warn(`Unknown referral code: ${refCode}`);

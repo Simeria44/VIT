@@ -216,7 +216,10 @@ export const getChainName = (chainId) => {
 
 // Get explorer URL for transaction
 export const getExplorerUrl = (chainId, txHash) => {
-  switch (chainId) {
+  // Convert chainId to number if it's a string
+  const numericChainId = typeof chainId === 'string' ? parseInt(chainId) : chainId;
+  
+  switch (numericChainId) {
     case 1:
       return `https://etherscan.io/tx/${txHash}`;
     case 11155111:
@@ -226,6 +229,7 @@ export const getExplorerUrl = (chainId, txHash) => {
     case 97:
       return `https://testnet.bscscan.com/tx/${txHash}`;
     default:
+      console.error('Unknown chainId for explorer URL:', { chainId, numericChainId });
       return '#';
   }
 };

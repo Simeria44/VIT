@@ -27,7 +27,10 @@ const ReferralDashboard = () => {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
-  const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState({
+    eth: false,
+    bnb: false
+  });
   const [withdrawChain, setWithdrawChain] = useState(null);
   
   // Local state to track withdrawal timestamps for immediate UI updates
@@ -84,8 +87,8 @@ const ReferralDashboard = () => {
   });
 
   // Withdrawal functions
-  const { writeContract: withdrawEth, data: ethWithdrawHash } = useWriteContract();
-  const { writeContract: withdrawBnb, data: bnbWithdrawHash } = useWriteContract();
+  const { writeContract: withdrawEth, data: ethWithdrawHash, reset: resetEthWithdraw } = useWriteContract();
+  const { writeContract: withdrawBnb, data: bnbWithdrawHash, reset: resetBnbWithdraw } = useWriteContract();
 
   // Wait for withdrawal transactions
   const { 
@@ -156,7 +159,7 @@ const ReferralDashboard = () => {
       return;
     }
 
-    setIsWithdrawing(true);
+    setIsWithdrawing(prev => ({ ...prev, [chain]: true }));
     setWithdrawChain(chain);
 
     try {
@@ -192,7 +195,7 @@ const ReferralDashboard = () => {
             toast.error(`Failed to switch to ${chainName}. Please switch manually in your wallet.`);
           }
           
-          setIsWithdrawing(false);
+          setIsWithdrawing(prev => ({ ...prev, [chain]: false }));
           setWithdrawChain(null);
           return;
         }
@@ -238,7 +241,7 @@ const ReferralDashboard = () => {
         toast.error(error.message || 'Withdrawal failed. Please try again.');
       }
     } finally {
-      setIsWithdrawing(false);
+      setIsWithdrawing(prev => ({ ...prev, [chain]: false }));
       setWithdrawChain(null);
     }
   };
@@ -255,11 +258,15 @@ const ReferralDashboard = () => {
         eth: currentTimestamp
       }));
       
+      // Reset ETH withdrawal state and clear transaction hash
+      setIsWithdrawing(prev => ({ ...prev, eth: false }));
+      resetEthWithdraw();
+      
       // Refetch contract data to update available amounts
       refetchEthReferrerInfo();
       refetchEthWithdrawalHistory();
     }
-  }, [ethWithdrawHash, isEthWithdrawPending, refetchEthReferrerInfo, refetchEthWithdrawalHistory]);
+  }, [ethWithdrawHash, isEthWithdrawPending, refetchEthReferrerInfo, refetchEthWithdrawalHistory, resetEthWithdraw]);
 
   useEffect(() => {
     if (bnbWithdrawHash && !isBnbWithdrawPending) {
@@ -272,35 +279,49 @@ const ReferralDashboard = () => {
         bnb: currentTimestamp
       }));
       
+      // Reset BNB withdrawal state and clear transaction hash
+      setIsWithdrawing(prev => ({ ...prev, bnb: false }));
+      resetBnbWithdraw();
+      
       // Refetch contract data to update available amounts
       refetchBnbReferrerInfo();
       refetchBnbWithdrawalHistory();
     }
-  }, [bnbWithdrawHash, isBnbWithdrawPending, refetchBnbReferrerInfo, refetchBnbWithdrawalHistory]);
+  }, [bnbWithdrawHash, isBnbWithdrawPending, refetchBnbReferrerInfo, refetchBnbWithdrawalHistory, resetBnbWithdraw]);
 
   // Handle ETH withdrawal transaction failures
   useEffect(() => {
     if (ethWithdrawError) {
       console.error('ETH withdrawal transaction failed:', ethWithdrawError);
       toast.error('ETH withdrawal transaction failed. Please try again.');
+      setIsWithdrawing(prev => ({ ...prev, eth: false }));
+      resetEthWithdraw();
     }
-  }, [ethWithdrawError]);
+  }, [ethWithdrawError, resetEthWithdraw]);
 
   // Handle BNB withdrawal transaction failures
   useEffect(() => {
     if (bnbWithdrawError) {
       console.error('BNB withdrawal transaction failed:', bnbWithdrawError);
       toast.error('BNB withdrawal transaction failed. Please try again.');
+      setIsWithdrawing(prev => ({ ...prev, bnb: false }));
+      resetBnbWithdraw();
     }
-  }, [bnbWithdrawError]);
+  }, [bnbWithdrawError, resetBnbWithdraw]);
 
-  // Reset local timestamps when address changes
+  // Reset local timestamps and withdrawal states when address changes
   useEffect(() => {
     setLocalWithdrawalTimestamps({
       eth: null,
       bnb: null
     });
-  }, [address]);
+    setIsWithdrawing({
+      eth: false,
+      bnb: false
+    });
+    resetEthWithdraw();
+    resetBnbWithdraw();
+  }, [address, resetEthWithdraw, resetBnbWithdraw]);
 
   return (
     <ReferralDashboardWrapper>
@@ -345,7 +366,8 @@ const ReferralDashboard = () => {
                 ethData={ethData}
                 bnbData={bnbData}
                 onWithdraw={handleWithdraw}
-                isWithdrawing={isWithdrawing || isEthWithdrawPending || isBnbWithdrawPending}
+                isEthWithdrawing={isWithdrawing.eth || isEthWithdrawPending}
+                isBnbWithdrawing={isWithdrawing.bnb || isBnbWithdrawPending}
                 currentChainId={chainId}
                 ethChainId={ETH_CHAIN_ID}
                 bnbChainId={BNB_CHAIN_ID}
